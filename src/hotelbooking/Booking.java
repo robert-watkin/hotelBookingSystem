@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Booking {
     // VARIABLE DECLARATION
-    private float bookingID;
+    private int bookingID;
     private String name;
     private int holidayDuration;
     private Date holidayDate;
@@ -13,7 +13,7 @@ public class Booking {
     private float roomPrice;
 
     // CONSTRUCTOR
-    public Booking(float bookingID, int holidayDuration, String hotelRoom, float subtotal, float roomPrice, String name, Date holidayDate) {
+    public Booking(int bookingID, int holidayDuration, String hotelRoom, float subtotal, float roomPrice, String name, Date holidayDate) {
         this.bookingID = bookingID;
         this.holidayDuration = holidayDuration;
         this.hotelRoom = hotelRoom;
@@ -25,10 +25,10 @@ public class Booking {
 
     // GETTERS AND SETTERS
     // booking ID
-    public float getBookingID() {
+    public int getBookingID() {
         return bookingID;
     }
-    public void setBookingID(float bookingID) {
+    public void setBookingID(int bookingID) {
         this.bookingID = bookingID;
     }
 
@@ -62,5 +62,19 @@ public class Booking {
     }
     public void setRoomPrice(float roomPrice) {
         this.roomPrice = roomPrice;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getHolidayDate() {
+        return holidayDate;
+    }
+    public void setHolidayDate(Date holidayDate) {
+        this.holidayDate = holidayDate;
     }
 }

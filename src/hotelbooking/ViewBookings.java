@@ -6,27 +6,25 @@ import java.io.FileReader;
 
 public class ViewBookings {
     public void printBookings() {
-        System.out.println("╔════════════════════════════╗");
-        System.out.println("║        ALL BOOKINGS        ║");
-        System.out.println("║                            ║");
+        System.out.println("╔══════════════════════════════════╗");
+        System.out.println("║           ALL BOOKINGS           ║");
         try {
             File file = new File("bookings.txt");
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             String[] values;
             while ((line = br.readLine()) != null){
-                System.out.println("║                            ║");
+                System.out.println("║                                  ║");
                 values = line.split(",");
 
-                System.out.println("║ Booking ID - " + values[0] + generateGap(14, values[0]) + "║");
-                System.out.println("║ Name - " + values[6] + generateGap(20, values[6]) + "║");
-                System.out.println("║ Hotel Room - " + values[2] + generateGap(14, values[2]) + "║");
-                System.out.println("║ Duration - " + values[1] + " days " + generateGap(10, values[1]) + "║");
-                System.out.println("║ Subtotal - " + values[3] + generateGap(16, values[3]) + "║");
-                System.out.println("║ Start Date - " + values[5] + generateGap(14, values[5]) + "║");
-                System.out.println("║                            ║");
+                System.out.println("║ Booking ID - " + values[0] + generateGap(20, values[0]) + "║");
+                System.out.println("║ Name - " + values[6] + generateGap(26, values[6]) + "║");
+                System.out.println("║ Hotel Room - " + values[2] + generateGap(20, values[2]) + "║");
+                System.out.println("║ Duration - " + values[1] + " days " + generateGap(16, values[1]) + "║");
+                System.out.println("║ Subtotal (inc. VAT) - " + values[3] + generateGap(11, values[3]) + "║");
+                System.out.println("║ Start Date - " + values[5] + generateGap(20, values[5]) + "║");
             }
-            System.out.println("==============================");
+            System.out.println("====================================");
 
         } catch (Exception e){
             System.out.println("Bookings file could not be found");
