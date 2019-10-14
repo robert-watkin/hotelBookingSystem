@@ -1,1 +1,2 @@
 1,14,Penthouse,1435.0,100.0,01/10/2019,poopy
+2,7,Triple Room,502.25,70.0,06/06/2021,Roberto

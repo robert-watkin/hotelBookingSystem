@@ -1,36 +1,155 @@
 package hotelbooking;
 
+import javax.naming.event.ObjectChangeListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-public class CreateBooking {
+public class CreateBooking extends JPanel implements ActionListener, ItemListener {
     // VARIABLE DECLARATION
     private Booking newBooking;
     private int bookingID;
-    private String name;
-    private int holidayDuration;
     private Date holidayDate;
-    private String hotelRoom;
     private float subtotal;
     private float roomPrice;
 
-    // primary function to create the bookings
-    public void createBooking() {
-        // Function calls below to set different values for the booking
-        generateBookingID();    // booking ID
-        getName();              // Name
-        getHolidayDuration();   // Holiday Duration
-        getHolidayDate();       // Holiday Date
-        getHotelRoom();         // Hotel Room
-        getRoomPrice();         // Room Price
-        getSubtotal();          // Subtotal
+    JPanel innerPanel;
+    JTextField nameField;
+    JComboBox durationField;
+    JComboBox day;
+    JComboBox month;
+    JComboBox year;
+    JComboBox hotelRoomField;
+    JLabel subtotalText;
+    JLabel roomPriceText;
+    JButton confirmButton;
+    JButton returnButton;
 
-        // creates new booking object
-        newBooking = new Booking(bookingID, holidayDuration, hotelRoom, subtotal, roomPrice, name, holidayDate);
-        writeToFile();  // calls function to save the new booking to the file
+
+    public CreateBooking() {
+        setPreferredSize(new Dimension(500, 430));
+        initCreateBooking();
+    }
+
+    private void initCreateBooking() {
+        this.setLayout(new FlowLayout(FlowLayout.LEADING, -150, 5));
+
+        roomPrice = 0;
+        subtotal = 0;
+
+        JLabel idLabel = new JLabel("ID : ");
+        idLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel id = new JLabel();
+
+        JLabel nameLabel = new JLabel("Name : ");
+        nameLabel.setHorizontalAlignment(JLabel.RIGHT);
+        nameLabel.setPreferredSize(new Dimension(50, 25));
+        nameField = new JTextField();
+        nameField.setPreferredSize(new Dimension(200, 25));
+
+        Integer[] durations = {7, 14};
+        JLabel durationLabel = new JLabel("Duration : ");
+        durationLabel.setHorizontalAlignment(JLabel.RIGHT);
+        durationField = new JComboBox(durations);
+        durationField.addItemListener(this);
+
+        String[] days = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+        String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+        String[] years = {"2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
+        JLabel dateLabel = new JLabel("Start Date :");
+        dateLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel daysLabel = new JLabel("days : ");
+        daysLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel monthsLabel = new JLabel("months : ");
+        monthsLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel yearsLabel = new JLabel("years : ");
+        yearsLabel.setHorizontalAlignment(JLabel.RIGHT);
+        day = new JComboBox(days);
+        month = new JComboBox(months);
+        year = new JComboBox(years);
+
+        generateBookingID();
+        id.setText(Integer.toString(bookingID));
+
+        innerPanel = new JPanel();
+        innerPanel.setLayout(new GridLayout(10, 2, 15, 15));
+
+        innerPanel.add(idLabel);
+        innerPanel.add(id);
+
+        innerPanel.add(nameLabel);
+        innerPanel.add(nameField);
+
+        innerPanel.add(durationLabel);
+        innerPanel.add(durationField);
+
+        JPanel dayPanel = new JPanel(new GridLayout(0, 2, 0, 0));
+        dayPanel.add(daysLabel);
+        dayPanel.add(day);
+
+        JPanel monthPanel = new JPanel(new GridLayout(0, 2, 0, 0));
+        monthPanel.add(monthsLabel);
+        monthPanel.add(month);
+
+        JPanel yearPanel = new JPanel(new GridLayout(0, 2, 0, 0));
+        yearPanel.add(yearsLabel);
+        yearPanel.add(year);
+
+        String[] hotelRooms = {"Penthouse", "King Room", "Double Room", "Triple Room", "Quad Room", "Single"};
+        JLabel hotelRoomLabel = new JLabel("Hotel Room:");
+        hotelRoomLabel.setHorizontalAlignment(JLabel.RIGHT);
+        hotelRoomField = new JComboBox(hotelRooms);
+        hotelRoomField.addItemListener(this);
+
+        JLabel roomPriceLabel = new JLabel("Room Price :");
+        roomPriceLabel.setHorizontalAlignment(JLabel.RIGHT);
+        roomPriceText = new JLabel(Float.toString(this.roomPrice));
+
+        JLabel subtotalLabel = new JLabel("Subtotal :");
+        subtotalLabel.setHorizontalAlignment(JLabel.RIGHT);
+        subtotalText = new JLabel(Float.toString(this.subtotal));
+
+        innerPanel.add(dateLabel);
+        innerPanel.add(dayPanel);
+
+        innerPanel.add(new JPanel());
+        innerPanel.add(monthPanel);
+
+        innerPanel.add(new JPanel());
+        innerPanel.add(yearPanel);
+
+        innerPanel.add(hotelRoomLabel);
+        innerPanel.add(hotelRoomField);
+
+        innerPanel.add(roomPriceLabel);
+        innerPanel.add(roomPriceText);
+
+        innerPanel.add(subtotalLabel);
+        innerPanel.add(subtotalText);
+
+        confirmButton = new JButton("Confirm Booking");
+        returnButton = new JButton("Return");
+        confirmButton.addActionListener(this);
+        returnButton.addActionListener(this);
+        confirmButton.setActionCommand("confirm");
+        returnButton.setActionCommand("return");
+
+        JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
+        buttons.add(confirmButton);
+        buttons.add(returnButton);
+
+        innerPanel.add(new JPanel());
+        innerPanel.add(buttons);
+
+        this.add(innerPanel);
     }
 
     // this function handles saving new bookings to the file
@@ -65,7 +184,7 @@ public class CreateBooking {
     // gets the daily price of the room
     private void getRoomPrice() {
         // switch statement checks hotel name to determine the room price
-        switch (this.hotelRoom) {
+        switch ((String) this.hotelRoomField.getSelectedItem()) {
             case "Penthouse":
                 roomPrice = 100.00f;
                 break;
@@ -91,159 +210,23 @@ public class CreateBooking {
     }
 
     private void getSubtotal() {
-        subtotal = holidayDuration * roomPrice;
+        Object o = durationField.getSelectedItem();
+        Integer duration = (Integer) o;
+        subtotal = duration * roomPrice;
         subtotal = subtotal * (float) 1.025;
+        System.out.println(subtotal);
     }
 
-    private void getHotelRoom() {
-        System.out.println("╔════════════════════════════╗");
-        System.out.println("║     Select Hotel Room      ║");
-        System.out.println("║ 1 - Penthouse              ║");
-        System.out.println("║ 2 - King Room              ║");
-        System.out.println("║ 3 - Double Room            ║");
-        System.out.println("║ 4 - Triple Room            ║");
-        System.out.println("║ 5 - Quad Room              ║");
-        System.out.println("║ 6 - Single                 ║");
-        System.out.println("==============================");
 
-        Scanner sc = new Scanner(System.in);
-        int choice;
-        while (true) {
-            try {
-                choice = Integer.parseInt(sc.nextLine());
-                if (1 <= choice && choice <= 6) {
-                    break;
-                }
-            } catch (Exception e) {
-                System.out.println("Error please enter a valid number (1-6)");
-            }
-            System.out.println("Error please enter a valid number (1-6)");
-        }
-        switch (choice) {
-            case 1:
-                hotelRoom = "Penthouse";
-                break;
-            case 2:
-                hotelRoom = "King Room";
-                break;
-            case 3:
-                hotelRoom = "Double Room";
-                break;
-            case 4:
-                hotelRoom = "Triple Room";
-                break;
-            case 5:
-                hotelRoom = "Quad Room";
-                break;
-            case 6:
-                hotelRoom = "Single";
-                break;
-            default:
-                System.out.println("Invalid menu choice");
-                break;
-        }
-    }
-
-    private void getHolidayDate() {
+    private void setHolidayDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String textDate = (String) day.getSelectedItem() + "/" + (String) month.getSelectedItem()+ "/" + (String) year.getSelectedItem();
+        System.out.println(textDate);
         try {
-            while (true) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                Scanner sc = new Scanner(System.in);
-
-                String day = "";
-                String month = "";
-                String year = "";
-
-                System.out.println("=====Set Holiday Date=====");
-                while (true) {
-                    sc = new Scanner(System.in);
-                    try {
-                        System.out.println("Please specify the day (1-31) : ");
-                        day = sc.nextLine();
-                        if (Integer.parseInt(day) < 1 || Integer.parseInt(day) > 31) {
-                            System.out.println("Please enter a number between 01-31");
-                        } else {
-                            if (Integer.parseInt(day) < 10) {
-                                day = "0" + Integer.parseInt(day);
-                                break;
-                            } else {
-                                break;
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Please enter a number between 01-31");
-                    }
-                }
-
-                System.out.println("Please specify the month (1-12) : ");
-                while (true) {
-                    sc = new Scanner(System.in);
-                    try {
-                        month = sc.nextLine();
-                        if (Integer.parseInt(month) < 1 || Integer.parseInt(month) > 12) {
-                            System.out.println("Please enter a number between 01-12");
-                        } else {
-                            if (Integer.parseInt(month) < 10) {
-                                month = "0" + Integer.parseInt(month);
-                                break;
-                            } else {
-                                break;
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Please enter a number between 01-31");
-                    }
-                }
-
-                System.out.println("Please specify the year (2000-9999) : ");
-                while (true) {
-                    sc = new Scanner(System.in);
-                    try {
-                        year = sc.nextLine();
-                        if (Integer.parseInt(year) < 2000 || Integer.parseInt(year) > 9999) {
-                            System.out.println("Please enter a number between 2000-9999");
-                        } else {
-                            break;
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Please enter a number between 01-31");
-                    }
-                }
-
-                holidayDate = sdf.parse(day + "/" + month + "/" + year);
-                Date todaysDate = new Date();
-                if (holidayDate.after(todaysDate)){
-                    break;
-                }else{
-                    System.out.println("Your booked date cannot be before today. Try Again!");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("ERROR! Holiday parse failed.");
+            holidayDate = sdf.parse(textDate);
+        } catch (Exception e){
+            System.out.println("PARSE ERROR");
         }
-    }
-
-    private void getHolidayDuration() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("How many days would you like to go away (7 or 14)");
-        while (true) {
-            String choice = sc.nextLine();
-            if (choice.equalsIgnoreCase("7")) {
-                holidayDuration = 7;
-                break;
-            } else if (choice.equalsIgnoreCase("14")) {
-                holidayDuration = 14;
-                break;
-            } else {
-                System.out.println("Please enter either 7 or 14");
-            }
-        }
-    }
-
-    private void getName() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter your name : ");
-        name = sc.nextLine();
     }
 
     private void generateBookingID() {
@@ -268,5 +251,26 @@ public class CreateBooking {
         } catch (Exception e) {
             System.out.println("File could not be found");
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if ("confirm".equals(actionEvent.getActionCommand())) {
+            setHolidayDate();
+            newBooking = new Booking(bookingID, (Integer) durationField.getSelectedItem(), (String) hotelRoomField.getSelectedItem(), subtotal, roomPrice, nameField.getText(), holidayDate);
+            writeToFile();  // calls function to save the new booking to the file
+            Window.startMainMenu();
+        } else if ("return".equals(actionEvent.getActionCommand())) {
+            Window.startMainMenu();
+        }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        System.out.println("change detected");
+        getRoomPrice();
+        getSubtotal();
+        roomPriceText.setText(Float.toString(roomPrice));
+        subtotalText.setText(Float.toString(subtotal));
     }
 }
