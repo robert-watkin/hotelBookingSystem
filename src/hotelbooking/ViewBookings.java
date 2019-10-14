@@ -1,43 +1,78 @@
 package hotelbooking;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-public class ViewBookings {
+public class ViewBookings extends JPanel implements ActionListener {
+
+    JTextArea outputArea;
+    JButton returnButton;
+    JScrollPane scroll;
+
+    public ViewBookings(){
+        initViewBookings();
+    }
+
+    private void initViewBookings() {
+        setSize(500,300);
+        setLayout(new FlowLayout(FlowLayout.LEADING));
+        JPanel buttonPanel = new JPanel(new GridLayout(0,3,10,10));
+
+        returnButton = new JButton();
+        returnButton.setText("Return");
+        returnButton.addActionListener(this);
+        returnButton.setActionCommand("return");
+
+        buttonPanel.add(new JPanel());
+        buttonPanel.add(returnButton);
+        buttonPanel.add(new JPanel());
+        outputArea = new JTextArea(20,50);
+        outputArea.setEditable(false);
+        outputArea.setLineWrap(true);
+        outputArea.setWrapStyleWord(true);
+        scroll = new JScrollPane(outputArea);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        printBookings();
+
+        add(scroll);
+        add(returnButton);
+    }
+
     public void printBookings() {
-        System.out.println("╔══════════════════════════════════╗");
-        System.out.println("║           ALL BOOKINGS           ║");
+
         try {
             File file = new File("bookings.txt");
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             String[] values;
-            while ((line = br.readLine()) != null){
-                System.out.println("║                                  ║");
+            outputArea.setText("=========================BOOKINGS=========================\n");
+            while ((line = br.readLine()) != null) {
+                outputArea.append("\n");
                 values = line.split(",");
 
-                System.out.println("║ Booking ID - " + values[0] + generateGap(20, values[0]) + "║");
-                System.out.println("║ Name - " + values[6] + generateGap(26, values[6]) + "║");
-                System.out.println("║ Hotel Room - " + values[2] + generateGap(20, values[2]) + "║");
-                System.out.println("║ Duration - " + values[1] + " days " + generateGap(16, values[1]) + "║");
-                System.out.println("║ Subtotal (inc. VAT) - " + values[3] + generateGap(11, values[3]) + "║");
-                System.out.println("║ Start Date - " + values[5] + generateGap(20, values[5]) + "║");
+                outputArea.append("Booking ID - " + values[0] + "\n");
+                outputArea.append("Name - " + values[6] + "\n");
+                outputArea.append("Hotel Room - " + values[2] + "\n");
+                outputArea.append("Duration - " + values[1] + "\n");
+                outputArea.append("Subtotal (inc. VAT) - " + "\n");
+                outputArea.append("Start Date - " + values[5] + "\n");
             }
-            System.out.println("====================================");
-
         } catch (Exception e){
             System.out.println("Bookings file could not be found");
             System.out.println(e.toString());
         }
     }
 
-    private String generateGap(int gap, String value){
-        gap -= value.length();
-        String gapString = "";
-        for (int i = 0; i < gap; i++){
-            gapString += " ";
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if ("return".equals(actionEvent.getActionCommand())){
+            Window.startMainMenu();
         }
-        return gapString;
     }
 }

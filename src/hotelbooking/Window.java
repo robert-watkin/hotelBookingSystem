@@ -13,6 +13,7 @@ public class Window  {
     static JPanel mainMenu;
     static JPanel loginScreen;
     static JPanel createBooking;
+    static JPanel viewBooking;
 
     public static void main(String[] args) {
         Window w = new Window();
@@ -24,12 +25,9 @@ public class Window  {
         mainMenu = new GraphicalMainMenu();
         loginScreen = new LoginScreen();
         createBooking = new CreateBooking();
+        viewBooking = new ViewBookings();
 
         loggedIn = false;
-        mainMenu.setVisible(false);
-        loginScreen.setVisible(false);
-
-
 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setResizable(false);
@@ -41,8 +39,6 @@ public class Window  {
     public static void startMainMenu(){
         mainMenu = new GraphicalMainMenu();
         mainMenu.setVisible(true);
-        loginScreen.setVisible(false);
-        createBooking.setVisible(false);
         f.getContentPane().removeAll();
         f.getContentPane().add(mainMenu);
         f.pack();
@@ -50,9 +46,7 @@ public class Window  {
     }
 
     public static void startLoginScreen(){
-        mainMenu.setVisible(false);
         loginScreen.setVisible(true);
-        createBooking.setVisible(false);
         f.getContentPane().removeAll();
         f.getContentPane().add(loginScreen);
         f.pack();
@@ -61,8 +55,6 @@ public class Window  {
 
     public static void startCreateBookingScreen(){
         createBooking = new CreateBooking();
-        mainMenu.setVisible(false);
-        loginScreen.setVisible(false);
         createBooking.setVisible(true);
         f.getContentPane().removeAll();
         f.getContentPane().add(createBooking);
@@ -70,4 +62,11 @@ public class Window  {
         f.setVisible(true);
     }
 
+    public static void startViewBookingScreen(){
+        viewBooking = new ViewBookings();
+        f.getContentPane().removeAll();
+        f.getContentPane().add(viewBooking);
+        f.pack();
+        f.setVisible(true);
+    }
 }

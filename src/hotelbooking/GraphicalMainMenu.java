@@ -10,12 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GraphicalMainMenu extends JPanel implements ActionListener {
-    JLabel title;
     private JButton createBooking;
     private JButton adminLogin;
     private JButton viewBookings;
     private JButton logout;
     private JButton quit;
+    private JLabel title;
     private boolean loggedIn;
     int rows;
 
@@ -24,11 +24,16 @@ public class GraphicalMainMenu extends JPanel implements ActionListener {
     }
 
     private void initMainMenuButtons() {
-        if (Window.loggedIn) {rows = 3;}
-        else {rows = 2;}
-        this.setPreferredSize(new Dimension(300,150*rows));
+        if (Window.loggedIn) {
+            rows = 4;
+        }
+        else {
+            rows = 3;
+        }
+        this.setPreferredSize(new Dimension(300,120*rows));
         JPanel innerPanel = new JPanel(new GridLayout(rows,0,0,40));
-
+        title = new JLabel("Holiday Booking System");
+        innerPanel.add(title);
         createBooking = new JButton();
         adminLogin = new JButton();
         viewBookings = new JButton();
@@ -92,6 +97,7 @@ public class GraphicalMainMenu extends JPanel implements ActionListener {
         }
         if ("view bookings".equals(actionEvent.getActionCommand())) {
             System.out.println("View Booking");
+            Window.startViewBookingScreen();
         }
         if ("logout".equals(actionEvent.getActionCommand())) {
             System.out.println("Logout");
