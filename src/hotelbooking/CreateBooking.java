@@ -1,5 +1,6 @@
 package hotelbooking;
 
+import database.AddBooking;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,13 +8,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateBooking extends JPanel implements ActionListener, ItemListener {
-    // VARIABLE DECLARATION
-    private Booking newBooking;
-    private int bookingID;
     private Date holidayDate;
     private float subtotal;
     private float roomPrice;
@@ -41,24 +40,13 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
 
     // the funciton below initialises all components of the createBooking window
     private void initCreateBooking() {
+        this.setBackground(Window.backgroundColor);
         // sets the layout for the class (extends JPanel) to a new flowlayout
         this.setLayout(new FlowLayout(FlowLayout.LEADING, -150, 5));
 
         // initialises the roomprice and subtotal to 0
         roomPrice = 0;
         subtotal = 0;
-
-        // ---------------ID---------------
-        // Creates new JLabel to identify the ID field
-        JLabel idLabel = new JLabel("ID : ");
-        idLabel.setHorizontalAlignment(JLabel.RIGHT);   // sets alignment for the JLabel
-        JLabel id = new JLabel();  // creates a new JLabel to hold the new ID
-
-        // calls function to generate the booking ID
-        generateBookingID();
-        id.setText(Integer.toString(bookingID));    // sets id label to the generated bookingID
-
-
 
         // ---------------NAME---------------
         // creates new JLabel to identify the name field
@@ -165,13 +153,11 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
 
         // new panel to hold the buttons is created
         JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
+        buttons.setBackground(Window.backgroundColor);
+
         // buttons are added to the panel
         buttons.add(confirmButton);
         buttons.add(returnButton);
-
-        // adds ID details
-        innerPanel.add(idLabel);
-        innerPanel.add(id);
 
         // adds name details
         innerPanel.add(nameLabel);
@@ -181,12 +167,22 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
         innerPanel.add(durationLabel);
         innerPanel.add(durationField);
 
+        JPanel empty = new JPanel();
+        JPanel empty2 = new JPanel();
+
+        empty.setBackground(Window.backgroundColor);
+        empty2.setBackground(Window.backgroundColor);
+
+        dayPanel.setBackground(Window.backgroundColor);
+        monthPanel.setBackground(Window.backgroundColor);
+        yearPanel.setBackground(Window.backgroundColor);
+
         // adds date details
         innerPanel.add(dateLabel);
         innerPanel.add(dayPanel);
-        innerPanel.add(new JPanel());
+        innerPanel.add(empty);
         innerPanel.add(monthPanel);
-        innerPanel.add(new JPanel());
+        innerPanel.add(empty2);
         innerPanel.add(yearPanel);
 
         // adds hotel room details
@@ -201,44 +197,19 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
         innerPanel.add(subtotalLabel);
         innerPanel.add(subtotalText);
 
+        JPanel empty3 = new JPanel();
+        empty3.setBackground(Window.backgroundColor);
+
         // buttons are added to the panel
-        innerPanel.add(new JPanel());
+        innerPanel.add(empty3);
         innerPanel.add(buttons);
+        innerPanel.setBackground(Window.backgroundColor);
 
         // inner panel is added to this class (extends JPanel)
         this.add(innerPanel);
 
         // price is updated
         updatePrice();
-    }
-
-    // this function handles saving new bookings to the file
-    private void writeToFile() {
-        // new simpledateformat is used to simplify the date for saving
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-        // concatenates the values together ready to save to file
-        String text = newBooking.getBookingID() +
-                "," + newBooking.getHolidayDuration() +
-                "," + newBooking.getHotelRoom() +
-                "," + newBooking.getSubtotal() +
-                "," + newBooking.getRoomPrice() +
-                "," + sdf.format(newBooking.getHolidayDate()) +
-                "," + newBooking.getName();
-
-        // creates a new file object to hold the bookings.txt file
-        File bookings = new File("bookings.txt");
-
-        // try catch, to catch any possible exceptions
-        try {
-            // new bufferedwritter is created for the bookings file
-            Writer out = new BufferedWriter(new FileWriter(bookings, true));
-            out.append(text + "\n");    // adds the new booking to the text file + starts new line
-            out.close();    // closes the bufferedwriter
-        } catch (IOException e) {
-            // exception thrown if booking could not be saved
-            System.out.println("COULD NOT SAVE BOOKING!!");
-        }
     }
 
     // gets the daily price of the room
@@ -308,39 +279,6 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
     }
 
     // the function below generates the next booking ID
-    private void generateBookingID() {
-        // try, catch block incase of file exceptions
-        try {
-            // new file object is created for the file bookings.txt
-            File file = new File("bookings.txt");
-            // new buffered reader is created to read the file
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String currentLine; // currentline String is created to hold the current line from the text file
-            String previousLine = "";   // previous line is created and initialised empty
-            int counter = 0;    // counter is set to 0
-            // infinite loop
-            while (true) {
-
-                if ((currentLine = br.readLine()) == null && counter > 0) {
-                    // if the current line is empty and the counter is more than 0
-                    break;  // break the loop
-                } else if (currentLine == null && counter == 0) {
-                    // if the current line is empty and the counter IS 0
-                    bookingID = 1; // set the bookingID to 1
-                    return; // return to function call
-                }
-                previousLine = currentLine; // set the previous line to the current line
-                counter++;  // increment the counter
-            }
-            // new array created called values and is set to the information on the previousline split by ','
-            String[] values = previousLine.split(",");
-            // booking ID is then set to the final value in values (the previous booking ID) +1
-            bookingID = Integer.parseInt(values[0]) + 1;
-        } catch (Exception e) {
-            // console output if an exception occurs
-            System.out.println("File could not be found");
-        }
-    }
 
     // the function below updates the price fields
     private void updatePrice() {
@@ -362,9 +300,10 @@ public class CreateBooking extends JPanel implements ActionListener, ItemListene
         if ("confirm".equals(actionEvent.getActionCommand())) {
             // if the confirm button has been pressed
             setHolidayDate();   // set the holiday date
-            // create a new booking object with the values from the user
-            newBooking = new Booking(bookingID, (Integer) durationField.getSelectedItem(), (String) hotelRoomField.getSelectedItem(), subtotal, roomPrice, nameField.getText(), holidayDate);
-            writeToFile();  // calls function to save the new booking to the file
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(2);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            AddBooking.add(nameField.getText(), (int) durationField.getSelectedItem(), (String) hotelRoomField.getSelectedItem(), subtotal, roomPrice, sdf.format(holidayDate));
             Window.startMainMenu(); // return to the main menu
         } else if ("return".equals(actionEvent.getActionCommand())) {
             // if the return button has been pressed

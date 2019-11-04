@@ -1,80 +1,52 @@
+/*
+Written By : Robert Watkin
+Date Created : 04/11/2019
+*/
 package hotelbooking;
 
-import java.util.Date;
-
 public class Booking {
-    // VARIABLE DECLARATION
     private int bookingID;
     private String name;
-    private int holidayDuration;
-    private Date holidayDate;
+    private int duration;
     private String hotelRoom;
-    private float subtotal;
-    private float roomPrice;
+    private float subtotal, roomPrice;
+    private String date;
 
-    // CONSTRUCTOR
-    public Booking(int bookingID, int holidayDuration, String hotelRoom, float subtotal, float roomPrice, String name, Date holidayDate) {
+    public Booking(int bookingID, String name, int duration, String hotelRoom, float subtotal, float roomPrice, String date) {
         this.bookingID = bookingID;
-        this.holidayDuration = holidayDuration;
+        this.name = name;
+        this.duration = duration;
         this.hotelRoom = hotelRoom;
         this.subtotal = subtotal;
         this.roomPrice = roomPrice;
-        this.name = name;
-        this.holidayDate = holidayDate;
+        this.date = date;
     }
 
-    // GETTERS AND SETTERS
-    // booking ID
     public int getBookingID() {
         return bookingID;
-    }
-    public void setBookingID(int bookingID) {
-        this.bookingID = bookingID;
-    }
-
-    // holiday duration
-    public int getHolidayDuration() {
-        return holidayDuration;
-    }
-    public void setHolidayDuration(int holidayDuration) {
-        this.holidayDuration = holidayDuration;
-    }
-
-    // hotel room
-    public String getHotelRoom() {
-        return hotelRoom;
-    }
-    public void setHotelRoom(String hotelRoom) {
-        this.hotelRoom = hotelRoom;
-    }
-
-    // subtotal
-    public float getSubtotal() {
-        return subtotal;
-    }
-    public void setSubtotal(float subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    // room price
-    public float getRoomPrice() {
-        return roomPrice;
-    }
-    public void setRoomPrice(float roomPrice) {
-        this.roomPrice = roomPrice;
     }
 
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public int getDuration() {
+        return duration;
     }
 
-    public Date getHolidayDate() {
-        return holidayDate;
+    public String getHotelRoom() {
+        return hotelRoom;
     }
-    public void setHolidayDate(Date holidayDate) {
-        this.holidayDate = holidayDate;
+
+    public float getSubtotal() {
+        return subtotal;
+    }
+
+    public float getRoomPrice() {
+        return roomPrice;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

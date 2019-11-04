@@ -19,13 +19,14 @@ public class Window  {
     private static JPanel viewBooking;
 
     public static Color backgroundColor = Color.orange;
+    public static String url = "jdbc:sqlite:C:\\\\Users/robert.watkin\\IdeaProjects\\hotelBookingSystem\\bookings.db";
     // END OF VARIABLE DECLARATION
 
     // Program entry point - main function
     public static void main(String[] args) {
         // initialises a new window object
         Window w = new Window();
-        InitDatabase.initDB();
+        InitDatabase.initDB(url);
         w.init(); // calls the init function of window
     }
 
@@ -77,11 +78,16 @@ public class Window  {
         f.setVisible(true);
     }
 
+    // this function starts the view booking screen
     public static void startViewBookingScreen(){
         viewBooking = new ViewBookings();
         f.getContentPane().removeAll();
         f.getContentPane().add(viewBooking);
         f.pack();
         f.setVisible(true);
+    }
+
+    public static String getUrl() {
+        return url;
     }
 }

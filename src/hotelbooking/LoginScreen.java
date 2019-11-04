@@ -24,6 +24,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 
     // function to initialise panel components
     private void initLoginComponents() {
+        this.setBackground(Window.backgroundColor);
         // sets the layout of the JPanel
         this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -59,8 +60,12 @@ public class LoginScreen extends JPanel implements ActionListener {
         innerPanel.add(pwLabel);
         innerPanel.add(pwField);
         // adds two blank JPanels for spacing
-        innerPanel.add(new JPanel());
-        innerPanel.add(new JPanel());
+        JPanel e1 = new JPanel();
+        JPanel e2 = new JPanel();
+        e1.setBackground(Window.backgroundColor);
+        e2.setBackground(Window.backgroundColor);
+        innerPanel.add(e1);
+        innerPanel.add(e2);
 
         // new JButton is created to log the user in
         JButton loginButton = new JButton("Login");
@@ -75,6 +80,10 @@ public class LoginScreen extends JPanel implements ActionListener {
         // adds both buttons to the innerpanel
         innerPanel.add(loginButton);
         innerPanel.add(returnButton);
+
+        // sets the panels background color based on the global static variable in the Window class
+        outerPanel.setBackground(Window.backgroundColor);
+        innerPanel.setBackground(Window.backgroundColor);
 
         // adds the innerpanel to the outerpanel
         outerPanel.add(innerPanel);
